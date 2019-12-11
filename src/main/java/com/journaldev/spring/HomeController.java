@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class HomeController {
+	
+	@Value("${app.baseurl}")
+	private String baseUrl;
 
-	@GetMapping("/")
+	@GetMapping("/home")
 	public String home(Model model, HttpSession session) {
 		@SuppressWarnings("unchecked")
 		List<String> msgs = (List<String>) session.getAttribute("MY_MESSAGES");
@@ -38,12 +42,12 @@ public class HomeController {
 		}
 		msgs.add(msg);
 		request.getSession().setAttribute("MY_MESSAGES", msgs);
-		return "redirect:/";
+		return "redirect:"+baseUrl+"/home";
 	}
 
 	@PostMapping("/invalidate")
 	public String destroySession(HttpServletRequest request) {
 		request.getSession().invalidate();
-		return "redirect:/";
+		return "redirect:"+baseUrl+"/home";
 	}
 }
